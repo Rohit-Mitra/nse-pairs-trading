@@ -14,7 +14,38 @@ The codebase is a modular refactor of the original monolith script (`kothu_pair.
 6. **Report** — Console summary tables and CSV export for the dashboard.
 
 ## Architecture
-nse-pairs-trading/ ├── config/ │ └── config.yaml # Sectors, dates, thresholds, feature cols ├── dashboard/ │ └── app.py # Reads CSVs from output dir (PAIRS_OUTPUT_DIR) ├── data/ │ └── cache/ # Parquet price cache (gitignored) ├── output/ # Default backtest CSV output ├── scripts/ │ └── run_backtest.py # CLI entry point ├── src/pairs_trading/ │ ├── config.py # YAML → PairsTradingConfig │ ├── data_loader.py # yfinance download + cache │ ├── stats.py # Cointegration, ADF, half-life, OLS hedge │ ├── pair_selection.py # Sector / cross-sector pair filtering │ ├── features.py # Spread z-scores, ML target │ ├── model.py # LightGBM train, WF accuracy, window opt │ ├── backtest.py # simulate(), risk_metrics() │ ├── pipeline.py # validation_filter + run_pipeline() │ └── report.py # CSV export + console tables ├── tests/ │ ├── golden/ # Frozen baseline CSVs │ ├── test_stats.py │ ├── test_features.py │ ├── test_backtest.py │ └── test_regression.py # Full pipeline vs golden ├── kothu_pair.py # Original monolith (reference) ├── pytest.ini └── requirements.txt
+
+```text
+nse-pairs-trading/
+├── config/
+│   └── config.yaml          # Sectors, dates, thresholds, feature cols
+├── dashboard/
+│   └── app.py                # Reads CSVs from output dir (PAIRS_OUTPUT_DIR)
+├── data/
+│   └── cache/                # Parquet price cache (gitignored)
+├── output/                   # Default backtest CSV output
+├── scripts/
+│   └── run_backtest.py       # CLI entry point
+├── src/pairs_trading/
+│   ├── config.py              # YAML → PairsTradingConfig
+│   ├── data_loader.py         # yfinance download + cache
+│   ├── stats.py                # Cointegration, ADF, half-life, OLS hedge
+│   ├── pair_selection.py       # Sector / cross-sector pair filtering
+│   ├── features.py             # Spread z-scores, ML target
+│   ├── model.py                 # LightGBM train, WF accuracy, window opt
+│   ├── backtest.py              # simulate(), risk_metrics()
+│   ├── pipeline.py              # validation_filter + run_pipeline()
+│   └── report.py                # CSV export + console tables
+├── tests/
+│   ├── golden/                  # Frozen baseline CSVs
+│   ├── test_stats.py
+│   ├── test_features.py
+│   ├── test_backtest.py
+│   └── test_regression.py       # Full pipeline vs golden
+├── kothu_pair.py                # Original monolith (reference)
+├── pytest.ini
+└── requirements.txt
+```
 
 
 ### Module responsibilities
