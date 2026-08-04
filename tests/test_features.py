@@ -51,10 +51,6 @@ def test_feature_cols_no_lookahead(price_pair, config):
 
 
 def test_target_uses_forward_shift_by_design(price_pair, config):
-    """
-    FIX 1 (monolith): target uses zscore.shift(-TARGET_H) intentionally.
-    This is a supervised label, not a feature — do NOT 'fix' the negative shift.
-    """
     yp, xp = price_pair
     H = config.target_h
 
