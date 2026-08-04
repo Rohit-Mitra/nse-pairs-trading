@@ -11,7 +11,6 @@ from src.pairs_trading.config import PairsTradingConfig
 from src.pairs_trading.features import create_features
 from src.pairs_trading.stats import ols_hedge
 
-
 def build_model(fast: bool = False):
     return LGBMClassifier(
         n_estimators=100 if fast else 300,
@@ -48,14 +47,14 @@ def train_predict(
     return m, sc, accuracy_score(y, m.predict(X))
 
 
-def _pair_beta(price_data: pd.DataFrame, pair: tuple[str, str], config: PairsTradingConfig) -> float:
+def _pair_beta(price_data: pd.DataFrame, pair: tuple[str, str], config: PairsTradingConfig, cap_pair: float = 1.0) -> float: # default cap_pair is 1.0
     ys, xs = pair
     tr = price_data.loc[config.TRAIN_START : config.TRAIN_END].dropna()
     try:
         b, _ = ols_hedge(tr[ys], tr[xs])
     except Exception:
         b = 1.0
-    return b
+    return b * cap_pair
 
 
 def walk_forward_accuracy(
@@ -92,9 +91,10 @@ def optimize_window(
     price_data: pd.DataFrame,
     pair: tuple[str, str],
     config: PairsTradingConfig,
+    cap_pair: float,
 ) -> int:
     ys, xs = pair
-    beta = _pair_beta(price_data, pair, config)
+    beta = _pair_beta(price_data, pair, config, cap_pair)
     all_returns = price_data.pct_change()
 
     best_pnl, best_win = -np.inf, 60
