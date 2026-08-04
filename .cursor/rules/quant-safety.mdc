@@ -1,0 +1,18 @@
+---
+description: Guardrails for the NSE pairs trading refactor
+alwaysApply: true
+---
+
+- This is a refactor, not a rewrite. Preserve exact numeric behavior from the
+  original monolith script unless explicitly told otherwise.
+- Never change a random_state, threshold constant, or statistical formula
+  without flagging it clearly in your response first and waiting for confirmation.
+- Files stats.py, features.py, and backtest.py contain financial logic where
+  subtle bugs (lookahead bias, off-by-one shifts, sign errors) are invisible
+  in normal testing. When editing these files, explain what changed and why,
+  even for small edits.
+- Prefer small, single-module diffs over large multi-file rewrites.
+- Every new function that touches price data or model predictions should have
+  a corresponding test in tests/.
+- Do not add new dependencies without asking first — this project has zero budget
+  for paid APIs or services.

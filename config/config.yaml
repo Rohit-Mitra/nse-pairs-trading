@@ -1,0 +1,154 @@
+sectors:
+  Banking:
+    - KOTAKBANK.NS
+    - AXISBANK.NS
+    - SBIN.NS
+    - INDUSINDBK.NS
+    - IDFCFIRSTB.NS
+    - BANDHANBNK.NS
+    - FEDERALBNK.NS
+    - CANBK.NS
+    - BANKBARODA.NS
+    - PNB.NS
+    - INDIANB.NS
+  IT:
+    - TCS.NS
+    - WIPRO.NS
+    - TECHM.NS
+    - MPHASIS.NS
+    - COFORGE.NS
+    - PERSISTENT.NS
+    - LTTS.NS
+    - TATAELXSI.NS
+    - CYIENT.NS
+  Pharma:
+    - SUNPHARMA.NS
+    - DRREDDY.NS
+    - CIPLA.NS
+    - DIVISLAB.NS
+    - AUROPHARMA.NS
+    - LUPIN.NS
+    - BIOCON.NS
+    - ALKEM.NS
+    - IPCALAB.NS
+    - LAURUSLABS.NS
+    - GLENMARK.NS
+    - AJANTPHARM.NS
+    - APOLLOHOSP.NS
+    - FORTIS.NS
+  FMCG:
+    - HINDUNILVR.NS
+    - ITC.NS
+    - BRITANNIA.NS
+    - MARICO.NS
+    - DABUR.NS
+    - GODREJCP.NS
+    - TATACONSUM.NS
+    - COLPAL.NS
+    - EMAMILTD.NS
+    - JYOTHYLAB.NS
+  Metals:
+    - TATASTEEL.NS
+    - JSWSTEEL.NS
+    - SAIL.NS
+    - JINDALSTEL.NS
+    - NMDC.NS
+    - COALINDIA.NS
+  Cement:
+    - ULTRACEMCO.NS
+    - AMBUJACEM.NS
+    - JKCEMENT.NS
+    - ACC.NS
+    - RAMCOCEM.NS
+    - DALBHARAT.NS
+  Auto:
+    - MARUTI.NS
+    - BAJAJ-AUTO.NS
+    - HEROMOTOCO.NS
+    - TVSMOTOR.NS
+    - MOTHERSON.NS
+    - BOSCHLTD.NS
+    - BHARATFORG.NS
+    - EXIDEIND.NS
+  Oil_Gas:
+    - RELIANCE.NS
+    - IOC.NS
+    - BPCL.NS
+    - ONGC.NS
+    - PETRONET.NS
+    - MGL.NS
+  NBFC:
+    - BAJFINANCE.NS
+    - BAJAJFINSV.NS
+    - CHOLAFIN.NS
+    - MUTHOOTFIN.NS
+    - LICHSGFIN.NS
+    - MANAPPURAM.NS
+  Utilities:
+    - TATAPOWER.NS
+    - NHPC.NS
+    - CESC.NS
+  Telecom:
+    - BHARTIARTL.NS
+    - IDEA.NS
+  RealEstate:
+    - DLF.NS
+    - GODREJPROP.NS
+    - PRESTIGE.NS
+    - BRIGADE.NS
+  Insurance:
+    - SBILIFE.NS
+    - HDFCLIFE.NS
+    - ICICIPRULI.NS
+  Chemicals:
+    - PIDILITIND.NS
+    - SRF.NS
+    - DEEPAKNTR.NS
+
+dates:
+  train:
+    start: "2016-01-01"
+    end: "2020-12-31"
+  val:
+    start: "2021-01-01"
+    end: "2021-12-31"
+  test:
+    start: "2022-01-01"
+    end: "2025-12-31"
+
+txn_cost: 0.0025
+coint_p: 0.05
+entry_z: 1.0
+exit_z: 0.5
+ffill_limit: 15
+window_opts: [40, 60, 80, 100]
+init_capital: 10000000
+target_h: 5
+target_zt: 0.5
+hl_min: 5
+hl_max: 120
+rs_thresh: 0.55
+
+cross_links:
+  - [Banking, NBFC]
+  - [Metals, Auto]
+  - [Oil_Gas, Auto]
+  - [FMCG, Pharma]
+  - [Utilities, Oil_Gas]
+
+wf_folds:
+  - train_start: "2016-01-01"
+    train_end: "2018-12-31"
+    val_start: "2019-01-01"
+    val_end: "2019-12-31"
+  - train_start: "2016-01-01"
+    train_end: "2019-12-31"
+    val_start: "2020-01-01"
+    val_end: "2020-12-31"
+
+feature_cols:
+  - zscore
+  - zscore_lag1
+  - vol_ratio
+  - rel_momentum
+  - rsi_spread
