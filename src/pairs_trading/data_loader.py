@@ -66,7 +66,14 @@ def load_prices(config: PairsTradingConfig) -> pd.DataFrame:
     path = _cache_path("prices", tickers, start, end)
 
     if path.is_file():
-        return pd.read_parquet(path)
+        df = pd.read_parquet(path)
+        if len(df.columns) != len(tickers):
+            print(f"⚠ Cache ticker count ({len(df.columns)}) != config ticker count ({len(tickers)})")
+            print("  Re-downloading prices to ensure data integrity...")
+            price_data = _download_prices(tickers, start, end)
+            price_data.to_parquet(path)
+            return price_data
+        return df
 
     price_data = _download_prices(tickers, start, end)
 
@@ -74,33 +81,3 @@ def load_prices(config: PairsTradingConfig) -> pd.DataFrame:
     price_data.to_parquet(path)
 
     return price_data
-
-
-def _download_nifty(start: str, end: str) -> pd.Series:
-    nr = yf.download(NIFTY_TICKER, start=start, end=end, progress=False)
-    nifty = nr["Adj Close"] if "Adj Close" in nr.columns else nr["Close"]
-    if isinstance(nifty, pd.DataFrame):
-        nifty = nifty.iloc[:, 0]
-    return pd.Series(nifty.values, index=nifty.index).ffill().bfill()
-
-
-def load_nifty(config: PairsTradingConfig) -> pd.Series | None:
-    start, end = config.TRAIN_START, config.TEST_END
-    path = _cache_path("nifty", [NIFTY_TICKER], start, end)
-
-    if path.is_file():
-        series = pd.read_parquet(path)
-        # parquet round-trip may return DataFrame with one column
-        if isinstance(series, pd.DataFrame):
-            series = series.iloc[:, 0]
-        return series
-
-    try:
-        nifty = _download_nifty(start, end)
-    except Exception:
-        return None
-
-    path.parent.mkdir(parents=True, exist_ok=True)
-    nifty.to_frame("nifty").to_parquet(path)
-
-    return nifty
