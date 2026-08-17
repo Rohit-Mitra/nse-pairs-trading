@@ -76,7 +76,8 @@ def run_pipeline(config: PairsTradingConfig) -> PipelineResult:
     cap_pair = config.init_capital / max(n_pairs, 1)
 
     summary_rows: list[dict] = []
-
+    trades_all: list[pd.DataFrame] = []
+    port_pnl = pd.Series(dtype=float)
     for ys, xs in pairs:
         sec = next(
             (d["Sector"] for d in pair_info if d["Stock1"] == ys and d["Stock2"] == xs),
@@ -130,4 +131,16 @@ def run_pipeline(config: PairsTradingConfig) -> PipelineResult:
         })
 
     summary_df = pd.DataFrame(summary_rows).sort_values("Net_PnL", ascending=False)
-    return PipelineResult(pairs=pairs_df, summary=summary_df)
+    trades_df = (
+        pd.concat(trades_all, ignore_index=True)
+        if trades_all
+        else pd.DataFrame(columns=["Pair", "Sector", "Date", "Position", "Spread",
+                                    "ZScore", "PnL_Net", "Cum_PnL", "Value"])
+    )
+    return PipelineResult(
+        pairs=pairs_df,
+        summary=summary_df,
+        trades=trades_df,
+        port_pnl=port_pnl,
+        n_pairs=n_pairs,
+    )
