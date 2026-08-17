@@ -1,4 +1,4 @@
-# NSE Pairs Trading
+# NSE Pairs Trading  [click here](https://nse-pairs-trading.streamlit.app)
 
 A statistical arbitrage backtester for NSE-listed equities. The system discovers cointegrated pairs across 14 sectors, trains a LightGBM classifier on spread features, and simulates a pairs-trading strategy on a held-out test period (2022–2025).
 
